@@ -7,7 +7,7 @@ function cat(path) {
             console.log(`Error reading ${path} ${err}`);
             process.exit(1);
         }
-        console.log(data);
+        console.log(data); 
     });
 }
 
