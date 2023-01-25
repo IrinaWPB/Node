@@ -2,21 +2,19 @@ const fs = require('fs');
 const axios = require('axios');
 const args = process.argv;
 
-function cat(path) {
+async function cat(path) {
     fs.readFile(path, 'utf8', (err, data) => {
         if (err) {
             console.log(`Error reading ${path} ${err}`);
-            process.exit(1);
         }
-        console.log(data);
-        return data;
+        console.log("data:", data);  
     });
 }
+
 
 async function webCat(url) {
     try {
         const res = await axios.get(url);
-        console.log(res.data);
         return res.data;
     } catch (e) {
         console.log(`Error fetching ${url} ${e}`);
@@ -31,21 +29,26 @@ function catWrite(path, file) {
     });
 }
 
-if (args.length == 3) {
-    if (args[2].indexOf('.txt') == -1) {
-        webCat(args[2]);
+
+async function runProgram() {
+    if (args.length == 3) {
+        if (args[2].indexOf('.txt') == -1) {
+            webCat(args[2]);
+        } else {
+            cat(args[2]);
+        }
+    } else if (args.length === 5) {
+        if (args[4].indexOf('.txt') == -1) {
+            catWrite(args[3], await webCat(args[4]));
+        } else {  
+            catWrite(args[3], await cat(args[4]));
+        }  
     } else {
-        cat(args[2]);
-    }
-} else if (args.length ==5) {
-    if (args[4].indexOf('.txt') == -1) {
-        catWrite(args[3], webCat(args[4]));
-    } else {   
-        catWrite(args[3], cat(args[4]));
-    }  
-} else {
-    console.log('Wrong amount of arguments');
+        console.log('Wrong amount of arguments');
+    } 
 }
+
+runProgram();
 
     
 

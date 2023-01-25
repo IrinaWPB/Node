@@ -12,7 +12,7 @@ function cat(path) {
 }
 
 function webCat(url) {
-    const res = axios.get(url)
+    axios.get(url)
     .then(res => console.log(res.data))
     .catch(err => console.log(`Error fetching ${url} ${err}`));
 }
